@@ -1,0 +1,30 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author GL63
+ */
+class CreditCardPayment extends Payment {
+    private String cardNumber;
+    private String cardHolder;
+    private String expiryDate;
+    private String cvv;
+
+    public CreditCardPayment(double amount, String cardNumber, String cardHolder, String expiryDate, String cvv) {
+        super(amount);
+        this.cardNumber = cardNumber;
+        this.cardHolder = cardHolder;
+        this.expiryDate = expiryDate;
+        this.cvv = cvv;
+    }
+
+    @Override
+    public void processPayment() {
+        super.processPayment();
+        System.out.println("Processing credit card payment...");
+        // Add code to handle credit card payment processing here
+    }
+}
