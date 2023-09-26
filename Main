@@ -94,6 +94,7 @@ public class Main {
                 String enteredUsername = scanner.nextLine().trim();
 
                 while (enteredUsername.isEmpty()) {
+                    System.out.println("");
                     System.out.println("      \033[0;31m*Username cannot be empty. Please enter again.*");
                     System.out.print("              \033[0;30mUsername >  ");
                     enteredUsername = scanner.nextLine().trim();
@@ -103,6 +104,7 @@ public class Main {
                 String enteredPassword = scanner.nextLine().trim();
 
                 while (enteredPassword.isEmpty()) {
+                    System.out.println("");
                     System.out.println("      \033[0;31m*Password cannot be empty. Please enter again.*");
                     System.out.print("              \033[0;30mPassword >  ");
                     enteredPassword = scanner.nextLine().trim();
@@ -171,10 +173,12 @@ public class Main {
                     // Valid input, break out of the loop
                     break;
                 } else {
+                    System.out.println("");
                     System.out.println("     \033[0;31m*Invalid option. Please enter 1, 2, or 3.*");
                 }
             } else {
                 // Invalid input, not an integer
+                System.out.println("");
                 System.out.println("     \033[0;31m*Invalid input. Please enter an integer.*");
                 scanner.nextLine(); // Consume the invalid input
             }
