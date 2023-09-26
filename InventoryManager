@@ -317,19 +317,22 @@ class InventoryManager {
                     switch (columnToUpdate) {
                         case 1:
                             // Update product name
-                            System.out.print("             Enter new product name >  ");
+                            System.out.println("");
+                            System.out.print("       Enter new product name >  ");
                             String newProductName = input.next();
                             updatedProduct = productID + "," + newProductName + "," + parts[2] + "," + parts[3];
                             break;
                         case 2:
                             // Update product price
-                            System.out.print("             Enter new product price >  ");
+                            System.out.println("");
+                            System.out.print("       Enter new product price >  ");
                             double newProductPrice = input.nextDouble();
                             updatedProduct = productID + "," + parts[1] + "," + newProductPrice + "," + parts[3];
                             break;
                         case 3:
                             // Update product quantity
-                            System.out.print("             Enter new product quantity >  ");
+                            System.out.println("");
+                            System.out.print("       Enter new product quantity >  ");
                             int newProductQuantity = input.nextInt();
                             updatedProduct = productID + "," + parts[1] + "," + parts[2] + "," + newProductQuantity;
                             break;
