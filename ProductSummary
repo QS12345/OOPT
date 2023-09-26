@@ -1,0 +1,46 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author GL63
+ */
+class ProductSummary {
+    private String productName;
+    private double unitPrice;
+    private int totalQuantity;
+    private double totalPrice;
+
+    public ProductSummary(String productName, double unitPrice) {
+        this.productName = productName;
+        this.unitPrice = unitPrice;
+        this.totalQuantity = 0;
+        this.totalPrice = 0.0;
+    }
+
+    public void addToTotalQuantity(int quantity) {
+        this.totalQuantity += quantity;
+    }
+
+    public void addToTotalPrice(double price) {
+        this.totalPrice += price;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+    
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+}
