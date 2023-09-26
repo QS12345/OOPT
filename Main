@@ -171,11 +171,11 @@ public class Main {
                     // Valid input, break out of the loop
                     break;
                 } else {
-                    System.out.println("Invalid option. Please enter 1, 2, or 3.");
+                    System.out.println("     \033[0;31m*Invalid option. Please enter 1, 2, or 3.*");
                 }
             } else {
                 // Invalid input, not an integer
-                System.out.println("Invalid input. Please enter an integer.");
+                System.out.println("     \033[0;31m*Invalid input. Please enter an integer.*");
                 scanner.nextLine(); // Consume the invalid input
             }
         }
