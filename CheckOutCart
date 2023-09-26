@@ -1,0 +1,82 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+import java.util.List;
+
+/**
+ *
+ * @author GL63
+ */
+ class CheckOutCart {
+
+    private List<Product> items;
+
+    public CheckOutCart(List<Product> items) {
+        this.items = items;
+    }
+
+    public List<Product> getItems() {
+        return items;
+    }
+    
+    
+
+    public void calculatePrices() {
+        double totalAmountBeforeSST = 0;
+        double totalSST = 0;
+        double totalAmountWithSST = 0;
+         System.out.println("");
+        System.out.println("");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("                                     \033[0;34mCHI BUY GROCERY");
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+        System.out.printf("%-15s %-20s %-10s %-12s %-13s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price");
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+
+        for (Product item : items) {
+            double totalPriceBeforeSST = item.getPrice() * item.getQuantity();
+            totalAmountBeforeSST += totalPriceBeforeSST;
+
+            // Calculate SST for this item
+            double sst = totalPriceBeforeSST * 0.05;
+            totalSST += sst;
+
+            double totalPriceWithSST = totalPriceBeforeSST + sst;
+            totalAmountWithSST += totalPriceWithSST;
+
+            System.out.printf("%-15s %-30s RM %-9.2f %-12d RM %-12.2f%n",
+                    item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
+        }
+
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+        System.out.printf("                                                              SST (5%%) : RM %-8.3f%n", totalSST);
+        System.out.printf("                                      Total Amount (including 5%% SST)  : RM %.2f%n", totalAmountWithSST);
+
+    }
+
+    public void processPayment(Payment payment) {
+        double totalAmount = 0;
+
+        for (Product item : items) {
+            double totalPriceBeforeSST = item.getPrice() * item.getQuantity();
+            totalAmount += totalPriceBeforeSST;
+
+            // Calculate SST for this item and add to the totalAmount
+            double sst = totalPriceBeforeSST * 0.05;
+            totalAmount += sst;
+        }
+
+        double paymentAmount = payment.getAmount();
+
+        if (paymentAmount >= totalAmount) {
+            System.out.println("Payment successful!");
+            System.out.printf("Total Amount (including 5%% SST): $%.2f%n", totalAmount);
+            System.out.println("Change: $" + (paymentAmount - totalAmount));
+        } else {
+            System.out.println("Payment failed. Insufficient funds.");
+        }
+    }
+}
