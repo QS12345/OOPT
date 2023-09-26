@@ -1,0 +1,32 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author GL63
+ */
+class CashPayment extends Payment {
+    private double cashTendered;
+
+    public CashPayment(double amount, double cashTendered) {
+        super(amount);
+        this.cashTendered = cashTendered;
+    }
+
+    @Override
+    public void processPayment() {
+        super.processPayment();
+        System.out.println("Processing cash payment...");
+    }
+
+    public double getCashTendered() {
+        return cashTendered;
+    }
+    
+    public double getChange() {
+        // Calculate and return the change
+        return cashTendered - getAmount();
+    }
+}
