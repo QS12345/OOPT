@@ -1,1 +1,187 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author GL63
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean exitProgram = false; // Flag to control program exit
+        
+        while (!exitProgram) {
+            System.out.println("");
+            System.out.println("          ! WELCOME TO CHI BUY POS SYSTEM ! ");
+            System.out.println("");
+            
+            
+            System.out.println("         \033[0;34m*---------------------------------*");
+            System.out.println("         \033[0;34m|           R  O  L  E            |");
+            System.out.println("         \033[0;34m|---------------------------------|");
+            System.out.println("         \033[0;34m|       [1]  Manager login        |");
+            System.out.println("         \033[0;34m|       [2]  Cashier login        |");
+            System.out.println("         \033[0;34m|       [3]  Exit Program         |");
+            System.out.println("         \033[0;34m*---------------------------------*");
+            System.out.println("");
+            System.out.print("           Please select your role >   ");
+            
+            int select1 = scanner.nextInt();
+
+            switch (select1) {
+                case 1:
+                    System.out.println("");
+                    System.out.println("           \033[0;32m*Moving to Manager system ....*");
+                    System.out.println("");
+                    System.out.println("------------------------------------------------------------------");
+                    System.out.println("");
+                    System.out.println("              \033[0;34m-----------------------");
+                    System.out.println("              \033[0;34m*    Manager login    *");
+                    System.out.println("              \033[0;34m-----------------------");
+                    managerlogin();
+                    break;
+                case 2:
+                    System.out.println("");
+                    System.out.println("           \033[0;32m*Moving to Cashier system ....*");
+                    System.out.println("");
+                    System.out.println("------------------------------------------------------------------");
+                    System.out.println("");
+                    System.out.println("              \033[0;34m-----------------------");
+                    System.out.println("              \033[0;34m*    Cashier login    *");
+                    System.out.println("              \033[0;34m-----------------------");
+                    cashierlogin();
+                    break;
+                case 3:
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("               \033[0;32m*Exiting program ....*");
+                    System.out.println(""); 
+                    System.out.println("");
+                            
+                    exitProgram = true; // Set the flag to exit the program
+                    break;
+                default:
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("      \033[0;31m*Invalid choice. Please select 1,2 or 3*");
+                    System.out.println("");
+                    System.out.println("");
+            }
+        }
+
+        scanner.close();
+
+    }
+//-------------------------------method--------------------------------------------------------------
+//-------------------------------manager login--------------------------------------------------------------
+
+    public static void managerlogin() {
+        Scanner scanner = new Scanner(System.in);
+        String managerFile = "managerAccount.txt";
+        boolean isAuthenticated = false;
+
+        while (!isAuthenticated) {
+            System.out.println("");
+            System.out.print("              \033[0;30mUsername >  ");
+            String enteredUsername = scanner.nextLine();
+            System.out.print("              Password >  ");
+            String enteredPassword = scanner.nextLine();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(managerFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 2) {
+                        String storedUsername = parts[0].trim();
+                        String storedPassword = parts[1].trim();
+
+                        if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {//if authenticate was success only create object
+                            isAuthenticated = true;
+                            System.out.println("");
+                            System.out.println("");
+                            System.out.println("                \033[0;32m*Login Successful!*");
+                            System.out.println("");
+                            System.out.println("------------------------------------------------------------------");
+
+                            // Create an object of InventoryManager
+                            InventoryManager inventoryManager = new InventoryManager();
+
+                            inventoryManager.managerMenu();     //call inventoryManager class menu to use all that fucntion
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!isAuthenticated) {
+                    System.out.println("");
+                    System.out.println("        \033[0;31m*Invalid username or password. Please Try Again.*");
+                    System.out.println("");
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    //-------------------------------Cashier login--------------------------------------------------------------
+    public static void cashierlogin() {
+        Scanner scanner = new Scanner(System.in);
+        String managerFile = "cashierAccount.txt";
+        boolean isAuthenticated = false;
+
+        while (!isAuthenticated) {
+            System.out.println("");
+            System.out.print("              \033[0;30mUsername >  ");
+            String enteredUsername = scanner.nextLine();
+            System.out.print("              Password >  ");
+            String enteredPassword = scanner.nextLine();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(managerFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 2) {
+                        String storedUsername = parts[0].trim();
+                        String storedPassword = parts[1].trim();
+
+                        if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {//if authenticate was success only create object
+                            isAuthenticated = true;
+                            System.out.println("");
+                            System.out.println("");
+                            System.out.println("                \033[0;32m*Login Successful!*");
+                            System.out.println("");
+                            System.out.println("------------------------------------------------------------------");
+
+                            // Create an object of cahier class
+                            Cashier cashier = new Cashier();
+                            cashier.cashierMenu();
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!isAuthenticated) {
+                    System.out.println("");
+                    System.out.println(" \033[0;31m*Invalid username or password. Please Try Again.*");
+                    System.out.println("");
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+}
 
