@@ -1,0 +1,462 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
+
+
+
+
+/**
+ *
+ * @author GL63
+ */
+public class Cashier {
+
+    //variable
+    static double totalPriceSummary = 0;
+    static double totalSSTcollected = 0;
+   
+    cartItem cart = new cartItem(); // Create a cart instance
+    static String productPtr = "product.txt";
+    
+    public String getCurrentDateTime() {
+        // Get the current date and time
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Define a format for the date and time (you can customize this format)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Format the current date and time as a string
+        String formattedDateTime = currentDateTime.format(formatter);
+
+        return formattedDateTime;
+    }
+    
+  public void cashierMenu() {
+        Scanner scanner = new Scanner(System.in);
+
+        
+        int select=-1;
+        do {
+            System.out.println("");
+            System.out.println("              \033[0;32mYou are in Cashier System");
+            System.out.println("");
+            System.out.println("         \033[0;34m*---------------------------------*");
+            System.out.println("         \033[0;34m|           Cashier Menu          |");
+            System.out.println("         \033[0;34m|---------------------------------|");
+            System.out.println("         \033[0;34m|   [1] Scan item                 |");
+            System.out.println("         \033[0;34m|   [2] Proceed to checkout       |");
+            System.out.println("         \033[0;34m|   [3] View transaction report   |");
+            System.out.println("         \033[0;34m|   [4] Logout                    |"); //--exit to login -------
+            System.out.println("         \033[0;34m*---------------------------------*");
+            System.out.println("");
+            
+            try {
+                System.out.print("             Select your option >   ");
+                select = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                // Handle the case where the user enters a non-integer input
+                System.out.println("      \033[0;31m*Invalid input. Please enter a valid menu option*");
+                scanner.nextLine(); // Consume the invalid input
+                continue; // Allow the user to re-enter the option
+            }
+            
+            scanner.nextLine(); // Consume the newline character
+
+            switch (select) {
+                case 1:
+                    scanItem(cart); // Pass the cart instance to scanItem
+                    break;
+                case 2:
+                    while (true) {
+                        if (!cart.getItems().isEmpty()) {
+                            CheckOutCart checkoutCart = new CheckOutCart(cart.getItems());
+                            checkoutCart.calculatePrices();// show the checkout cart 
+
+                            double totalAmount = 0;
+                            // Proceed with payment
+                            System.out.println("");
+                            System.out.println("------------------------------------------------------------------");
+                            System.out.println("");
+                            System.out.println("");
+                            System.out.println("            \033[0;34m---------------------------");
+                            System.out.println("            \033[0;34m*         Payment         *");
+                            System.out.println("            \033[0;34m---------------------------");
+
+                            System.out.println("            \033[0;34m*                         *");
+                            System.out.println("            \033[0;34m      [1]  Credit Card     ");
+                            System.out.println("            \033[0;34m      [2]  Cash            ");
+                            System.out.println("            \033[0;34m*                         *");
+                            System.out.println("");
+                            System.out.println("");
+                            System.out.print("   Select Payment Method >  ");
+                            int paymentChoice = scanner.nextInt();
+                            scanner.nextLine(); // Consume the newline character
+
+                            Payment payment = null;
+                            switch (paymentChoice) {
+                                case 1:
+                                    // Credit Card Payment
+                                    System.out.print("Enter Credit Card Number: ");
+                                    String cardNumber = scanner.nextLine();
+                                    System.out.print("Enter Card Holder Name: ");
+                                    String cardHolder = scanner.nextLine();
+                                    System.out.print("Enter Expiry Date: ");
+                                    String expiryDate = scanner.nextLine();
+                                    System.out.print("Enter CVV: ");
+                                    String cvv = scanner.nextLine();
+                                    payment = new CreditCardPayment(totalAmount, cardNumber, cardHolder, expiryDate, cvv);
+                                    printReceipt(checkoutCart, payment);
+
+                                    break;
+                                case 2:
+                                    // Cash Payment
+                                    System.out.println("");
+                                    System.out.println("");
+                                    System.out.println("            \033[0;34m---------------------------");
+                                    System.out.println("            \033[0;34m*           Cash          *");
+                                    System.out.println("            \033[0;34m---------------------------");
+                                    System.out.print("       Enter Cash Amount (RM) >  ");
+                                    double cashTendered = scanner.nextDouble();
+                                    payment = new CashPayment(totalAmount, cashTendered);
+                                    printReceipt(checkoutCart, payment);
+
+                                    break;
+                                default:
+                                    System.out.println("");
+                                    System.out.println("      \033[0;31m*Please select a valid payment method*");
+
+                                    continue;
+                            }
+
+                            cart.getItems().clear(); // Clear the cart after checkout
+                        } else {
+                            System.out.println("");
+                            System.err.println("    \033[0;31mCart is empty. Add items before checking out.");
+                        }
+
+                        break;
+                    }
+                    break;
+                case 3:
+                    summaryReport();
+                    break;
+                case 4:
+             
+                    System.out.println("");
+                    System.out.println("           \033[0;32m*Exiting Manager program ....*");
+                    System.out.println("");
+                    System.out.println("------------------------------------------------------------------");
+                    break;
+                default:
+                    System.out.println("      \033[0;31m*Invalid option. Please type again*");
+                    break;
+            }
+        } while(select !=4);
+  }
+//----------display product----------------------
+    public static void displayProducts(String productPtr) {
+        System.out.println("");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("                       \033[0;34mProduct List     ");
+        System.out.println("\033[0;34m--------------------------------------------------------------------");
+        System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s%n", "Product ID", "Product Name", "Price", "Quantity");
+        System.out.println("\033[0;34m--------------------------------------------------------------------");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String productId = parts[0].trim();
+                    String productName = parts[1].trim();
+                    double price = Double.parseDouble(parts[2].trim());
+                    int quantity = Integer.parseInt(parts[3].trim());
+
+                    // Format and print the product information
+                    System.out.printf("%-15s %-30s $%-10.2f %-10d%n", productId, productName, price, quantity);
+                } else {
+                    System.err.println("Invalid line format: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+
+        System.out.println("\033[0;34m-------------------------------------------------------------");
+        System.out.println("");
+
+    }
+
+    //----------------scan item------------------------
+  public void scanItem(cartItem cart) {
+    Scanner scanner = new Scanner(System.in);
+    char choice;
+
+    do {
+        displayProducts(productPtr);
+        System.out.print("   Enter the product ID >  ");
+        String productId = scanner.nextLine();
+        
+        // Read the product quantity
+        System.out.print("         Enter Quantity >  ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        // Read product data from the file and create a Product object
+        Product product = createProductFromData(productId,quantity);
+
+        if (product != null) {
+            int availableStock = product.getQuantity();
+            
+            if (quantity <= 0) {
+                System.err.println("      \033[0;31m*Please select a valid quantity !*");
+            } else if (quantity > availableStock) {
+                System.err.println("   \033[0;31m*Quantity exceeds available stock !*");
+
+            } else {
+                // Add the product to the cart
+                cart.addItem(product);
+                System.out.println("");
+                System.out.println("");
+                System.out.println("            \033[0;32m*Item added to the cart.*");
+
+                // Ask the user if they want to scan another item
+                System.out.println("");
+                System.out.println("");
+                System.out.println("------------------------------------------------------------------");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("            \033[0;34m*                         *");
+                System.out.println("            \033[0;34m    [Y]  Yes               ");
+                System.out.println("            \033[0;34m    [N]  Proceed to cart   ");
+                System.out.println("            \033[0;34m*                         *");
+                System.out.println("");
+                System.out.println("");
+                System.out.print("           Scan another item? >  ");
+                choice = scanner.nextLine().charAt(0);
+
+                if (choice == 'n' || choice == 'N') {
+                    displayCart(cart); // Display the cart
+                    break; // Exit the loop
+                }
+            }
+        } else {
+            System.err.println("      \033[0;31m*Product not found !*");
+        }
+    } while (true);
+}
+
+
+    //---------------------read the data from text file so can use for scanning item--------------this is important-------------!!!!!!!!!!!!!!!!!!!!
+private Product createProductFromData(String productId, int requestedQuantity) {
+    Product product = null; // Initialize product to null
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
+        String line;
+        List<String> lines = new ArrayList<>();
+        boolean productFound = false;
+
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 4 && parts[0].trim().equals(productId)) {
+                String productName = parts[1].trim();
+                double price = Double.parseDouble(parts[2].trim());
+                int currentQuantity = Integer.parseInt(parts[3].trim());
+
+                // Check if the product is in stock
+                if (currentQuantity >= requestedQuantity) {
+                    // Create a Product object
+                    product = new Product(productId, productName, price, requestedQuantity);
+                    productFound = true;
+                    lines.add(String.format("%s,%s,%.2f,%d", productId, productName, price, currentQuantity - requestedQuantity));
+                } else {
+                    // Product does not have enough stock
+                    lines.add(line); // Keep the line as-is
+                    System.out.println("      \033[0;31m*Not enough stock for this product !*");
+                }
+            } else {
+                lines.add(line); // Add the unchanged line to the list
+            }
+        }
+
+        // Write the updated product quantities back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productPtr))) {
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+        }
+
+        return productFound ? product : null;
+    } catch (IOException e) {
+        System.err.println("Error reading/writing the file: " + e.getMessage());
+    }
+
+    return null; // Product not found or error occurred
+}
+
+
+    //-------------------------display cart------------------------
+    public void displayCart(cartItem cart) {            //this is use for display cart item whenever user want to
+        List<Product> items = cart.getItems();
+
+        if (items.isEmpty()) {
+            System.out.println("Cart is empty.");
+        } else {
+            System.out.println();
+            System.out.println("");
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("                           \033[0;34mCart Item");
+            System.out.println("\033[0;34m------------------------------------------------------------------------");
+            System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s%n", "Product ID", "Product Name", "Price", "Quantity");
+            System.out.println("\033[0;34m------------------------------------------------------------------------");
+            for (Product item : items) {
+                System.out.printf("%-15s %-30s $%-10.2f %-10d%n",
+                        item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity());
+            }
+            System.out.println("\033[0;34m------------------------------------------------------------------------");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------");
+        }
+
+    }
+
+    //display receipt--------------and do the checkout-------------------
+    public void printReceipt(CheckOutCart checkoutCart, Payment payment) {
+        System.out.println("");
+        System.out.println("");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+        System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s %-15s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price(include sst)");
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+
+        double totalAmount = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("report.txt", true))) {
+
+            for (Product item : checkoutCart.getItems()) {
+                double totalPriceBeforeSST = item.getPrice() * item.getQuantity();
+                totalPriceSummary += totalPriceBeforeSST;
+
+                double sst = totalPriceBeforeSST * 0.05;
+                totalSSTcollected += sst;
+
+                double totalPriceWithSST = totalPriceBeforeSST + sst;
+                totalAmount += totalPriceWithSST;
+
+                String line = String.format("%s,%s,%.2f,%d,%.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
+                System.out.printf("%-15s %-10s RM%-10.2f %-10d RM%-15.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
+                writer.write(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        double sst = totalAmount - (totalAmount / 1.05); // Calculate SST based on total amount
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
+        System.out.printf("TOTAL SST CHARGE:RM%.2f%n", sst);
+
+        if (payment instanceof CashPayment) {
+            double change = ((CashPayment) payment).getCashTendered() - totalAmount;
+            System.out.printf("Total Amount (including 5%% SST): RM%.2f%n", totalAmount);
+            System.out.printf("Change: $%.2f%n", change);
+        } else {
+            // Display total amount for non-cash payments (e.g., credit card)
+            System.out.printf("Total Amount (including 5%% SST): RM%.2f%n", totalAmount);
+        }
+
+        System.out.println("--------------------------------------------------------");
+
+    }
+
+    public static void summaryReport() {
+        // Initialize variables to store total gain and total collected SST
+        double totalGain = 0.0;
+        double totalCollectedSST = 0.0;
+       String currentDateTime = GregorianCalendarExample.getCurrentDateTime();
+
+        // Initialize a data structure to store product summaries
+        Map<String, ProductSummary> productSummaries = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("report.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    String productId = parts[0];
+                    String productName = parts[1];
+                    double unitPrice = Double.parseDouble(parts[2]);
+                    int quantity = Integer.parseInt(parts[3]);
+                    double totalPrice = Double.parseDouble(parts[4]);
+
+                    // Update or create a product summary
+                    ProductSummary summary = productSummaries.getOrDefault(productId, new ProductSummary(productName, unitPrice));
+                    summary.addToTotalQuantity(quantity);
+                    summary.addToTotalPrice(totalPrice);
+                    productSummaries.put(productId, summary);
+
+                    // Update total gain and total collected SST
+                    totalGain += totalPrice;
+                    totalCollectedSST += totalPrice * 0.05;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        // Print the summary report
+         System.out.println("");
+        System.out.println("");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("");
+         
+        
+        System.out.println("Date and Time - " + currentDateTime);
+        System.out.println("");
+        System.out.println("                                   \033[0;34mSUMMARY REPORT                                            ");
+        System.out.println("\033[0;34m======================================================================================================");
+        System.out.printf("\033[0;34m%-12s | %-30s | %-15s | %-15s | %-12s%n", "Product ID", "Product Name", "Unit Price(RM)", "Total Quantity", "Total Price(RM)");
+        System.out.println("\033[0;34m======================================================================================================");
+        for (Map.Entry<String, ProductSummary> entry : productSummaries.entrySet()) {
+            String productId = entry.getKey();
+            ProductSummary summary = entry.getValue();
+            System.out.printf("%-12s | %-30s | %-15.2f | %-15d | %-15.2f%n", productId, summary.getProductName(), summary.getUnitPrice(), summary.getTotalQuantity(), summary.getTotalPrice());
+        }
+        System.out.println("\033[0;34m======================================================================================================");
+
+        // Print total gain and total collected SST
+        System.out.println("                                                                   Total Gain (RM) : " + totalGain);
+        String formattedTotalSST = String.format("%.2f", totalCollectedSST);
+        System.out.println("                                                          Total SST Collected (RM) : " + formattedTotalSST);
+         System.out.println("");
+        System.out.println("");
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("");
+
+    }
+
+}
