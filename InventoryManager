@@ -301,7 +301,6 @@ class InventoryManager {
                 System.out.println("           \033[0;34m|       [3]  Quantity       |");
                 System.out.println("           \033[0;34m|---------------------------|");
                 System.out.println("");
-                System.out.println("");
                 System.out.print("   Select the column to update >  ");
 
                 if (input.hasNextInt()) {
@@ -310,10 +309,10 @@ class InventoryManager {
                     if (columnToUpdate >= 1 && columnToUpdate <= 3) {
                         break; // Valid input, exit the loop
                     } else {
-                        System.out.println("Invalid column selection. Please enter 1, 2, or 3.");
+                        System.out.println("  \033[0;31m*Invalid column selection. Please enter 1, 2, or 3.*");
                     }
                 } else {
-                    System.out.println("Invalid input. Please enter a number (1, 2, or 3).");
+                    System.out.println("  \033[0;31m*Invalid input. Please enter a number (1, 2, or 3).*");
                     input.nextLine(); // Consume the invalid input
                 }
             } while (true);
