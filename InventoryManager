@@ -301,6 +301,7 @@ class InventoryManager {
             System.out.println("");
             System.out.print("   Select the column to update >  ");
             int columnToUpdate = input.nextInt();
+            input.nextLine();
 
             String line;
             boolean productFound = false; // Flag to check if the product is found
@@ -319,7 +320,7 @@ class InventoryManager {
                             // Update product name
                             System.out.println("");
                             System.out.print("       Enter new product name >  ");
-                            String newProductName = input.next();
+                            String newProductName = input.nextLine();
                             updatedProduct = productID + "," + newProductName + "," + parts[2] + "," + parts[3];
                             break;
                         case 2:
