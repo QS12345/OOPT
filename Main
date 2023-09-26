@@ -27,21 +27,21 @@ public class Main {
 
             while (!isAuthenticated) {
                 System.out.println("");
-                System.out.print("              Username >  ");
+                System.out.print("              \033[0;30mUsername >  ");
                 String enteredUsername = scanner.nextLine().trim();
 
                 while (enteredUsername.isEmpty()) {
-                    System.out.println("Username cannot be empty. Please enter again.");
-                    System.out.print("              Username >  ");
+                    System.out.println("      \033[0;31m*Username cannot be empty. Please enter again.*");
+                    System.out.print("              \033[0;30mUsername >  ");
                     enteredUsername = scanner.nextLine().trim();
                 }
 
-                System.out.print("              Password >  ");
+                System.out.print("              \033[0;30mPassword >  ");
                 String enteredPassword = scanner.nextLine().trim();
 
                 while (enteredPassword.isEmpty()) {
-                    System.out.println("Password cannot be empty. Please enter again.");
-                    System.out.print("              Password >  ");
+                    System.out.println("      \033[0;31m*Password cannot be empty. Please enter again.*");
+                    System.out.print("              \033[0;30mPassword >  ");
                     enteredPassword = scanner.nextLine().trim();
                 }
 
@@ -90,21 +90,21 @@ public class Main {
 
             while (!isAuthenticated) {
                 System.out.println("");
-                System.out.print("              Username >  ");
+                System.out.print("              \033[0;30mUsername >  ");
                 String enteredUsername = scanner.nextLine().trim();
 
                 while (enteredUsername.isEmpty()) {
-                    System.out.println("Username cannot be empty. Please enter again.");
-                    System.out.print("              Username >  ");
+                    System.out.println("      \033[0;31m*Username cannot be empty. Please enter again.*");
+                    System.out.print("              \033[0;30mUsername >  ");
                     enteredUsername = scanner.nextLine().trim();
                 }
 
-                System.out.print("              Password >  ");
+                System.out.print("              \033[0;30mPassword >  ");
                 String enteredPassword = scanner.nextLine().trim();
 
                 while (enteredPassword.isEmpty()) {
-                    System.out.println("Password cannot be empty. Please enter again.");
-                    System.out.print("              Password >  ");
+                    System.out.println("      \033[0;31m*Password cannot be empty. Please enter again.*");
+                    System.out.print("              \033[0;30mPassword >  ");
                     enteredPassword = scanner.nextLine().trim();
                 }
 
