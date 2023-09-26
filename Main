@@ -197,6 +197,7 @@ public class Main {
                     System.out.println("");
 
                     exitProgram = true; // Set the flag to exit the program
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("");
