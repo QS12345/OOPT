@@ -24,7 +24,7 @@ import java.util.InputMismatchException;
  * @author GL63
  */
 public class Cashier {
-
+Main main = new Main();// login page
     //variable
     static double totalPriceSummary = 0;
     static double totalSSTcollected = 0;
@@ -160,6 +160,7 @@ public class Cashier {
                     System.out.println("           \033[0;32m*Exiting Manager program ....*");
                     System.out.println("");
                     System.out.println("------------------------------------------------------------------");
+                    main.LoginMain();
                     break;
                 default:
                     System.out.println("      \033[0;31m*Invalid option. Please type again*");
