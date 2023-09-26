@@ -1,5 +1,4 @@
 
-
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,10 +21,11 @@ class InventoryManager {
     public static void managerMenu() {
         String productPtr = "product.txt";
         String tempFileName = "temp.txt";
+        Main main = new Main();
 
         Scanner scanner = new Scanner(System.in);
-        int select=-1;
-        do{
+        int select = -1;
+        do {
             System.out.println("");
             System.out.println("              \033[0;32mYou are in Manager System");
             System.out.println("");
@@ -39,7 +39,7 @@ class InventoryManager {
             System.out.println("         \033[0;34m|       [5]  Logout               |"); //--exit to login -------
             System.out.println("         \033[0;34m*---------------------------------*");
             System.out.println("");
-           try {
+            try {
                 System.out.print("             Select your option >   ");
                 select = scanner.nextInt();
             } catch (InputMismatchException e) {
@@ -48,7 +48,7 @@ class InventoryManager {
                 scanner.nextLine(); // Consume the invalid input
                 continue; // Allow the user to re-enter the option
             }
-            
+
             scanner.nextLine(); // Consume the newline character
 
             switch (select) {
@@ -71,16 +71,15 @@ class InventoryManager {
                     System.out.println("           \033[0;32m*Exiting Manager program ....*");
                     System.out.println("");
                     System.out.println("------------------------------------------------------------------");
-
+                    main.LoginMain();
                     break;
                 default:
                     System.out.println("");
                     System.out.println("      \033[0;31m*Invalid option. Please type again*");
 
             }
-        }while(select !=5);
+        } while (select != 5);
     }
-    
 
     public static void displayProducts(String productPtr) {
         System.out.println("");
@@ -104,7 +103,7 @@ class InventoryManager {
 
                     // Format and print the product information
                     System.out.printf("%-15s %-30s RM%-10.2f %-10d%n", productId, productName, price, quantity);
-                    
+
                 } else {
                     System.err.println("Invalid line format: " + line);
                 }
@@ -115,39 +114,39 @@ class InventoryManager {
 
         System.out.println("\033[0;34m--------------------------------------------------------------------");
         System.out.println("");
-        
+
         managerMenu();
     }
 
     // ----------------------------add product--------------------------------------------------------------
-private static void addProduct(String productPtr) {
-    Scanner scanner = null;
-    FileWriter fileWriter = null;
-    BufferedWriter writer = null;
-    BufferedReader reader = null;
+    private static void addProduct(String productPtr) {
+        Scanner scanner = null;
+        FileWriter fileWriter = null;
+        BufferedWriter writer = null;
+        BufferedReader reader = null;
 
-    try {
-        scanner = new Scanner(System.in);
-        fileWriter = new FileWriter(productPtr, true);
-        writer = new BufferedWriter(fileWriter);
-        System.out.println("");
-        System.out.println("------------------------------------------------------------------");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("              \033[0;34m-------------------------");
-        System.out.println("              \033[0;34m*      Add Product      *");
-        System.out.println("              \033[0;34m-------------------------");
-        System.out.println("");
-        System.out.println("");
-        // Prompt the user for product details
-        System.out.print("             Enter product ID >  ");
-        String productID = scanner.next();
-        System.out.println("");
-        System.out.print("           Enter product name >  ");
-        String productName = scanner.next();
-        System.out.println("");
-        
-     double productPrice = 0.0;
+        try {
+            scanner = new Scanner(System.in);
+            fileWriter = new FileWriter(productPtr, true);
+            writer = new BufferedWriter(fileWriter);
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("              \033[0;34m-------------------------");
+            System.out.println("              \033[0;34m*      Add Product      *");
+            System.out.println("              \033[0;34m-------------------------");
+            System.out.println("");
+            System.out.println("");
+            // Prompt the user for product details
+            System.out.print("             Enter product ID >  ");
+            String productID = scanner.next();
+            System.out.println("");
+            System.out.print("           Enter product name >  ");
+            String productName = scanner.next();
+            System.out.println("");
+
+            double productPrice = 0.0;
             boolean validInput = false;
             while (!validInput) {
                 System.out.print("     Enter product price (RM) >  ");
@@ -168,110 +167,110 @@ private static void addProduct(String productPtr) {
                 System.out.print("       Enter product quantity >  ");
             }
             int productQuantity = scanner.nextInt();
-            
-        // Construct a string representing the new product
-        String newProduct = String.format("%s,%s,%.2f,%d%n", productID, productName, productPrice, productQuantity);
 
-        // Write the new product to the file
-        writer.write(newProduct);
-        System.out.println("");
-        System.out.println("           \033[0;32m*Product added Successfully!*");
-        System.out.println("");
-        System.out.println("------------------------------------------------------------------");
-        System.out.println("");
-        System.out.println("");
+            // Construct a string representing the new product
+            String newProduct = String.format("%s,%s,%.2f,%d%n", productID, productName, productPrice, productQuantity);
 
-        // Close the resources for writing
-        writer.close();
-        fileWriter.close();
+            // Write the new product to the file
+            writer.write(newProduct);
+            System.out.println("");
+            System.out.println("           \033[0;32m*Product added Successfully!*");
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("");
+            System.out.println("");
 
-        managerMenu(); // Go back to the menu
-    } catch (IOException e) {
-        System.err.println("Error: " + e.getMessage());
-    } finally {
-        // Close all resources in the finally block
-        try {
-            if (writer != null) {
-                writer.close();
-            }
-            if (fileWriter != null) {
-                fileWriter.close();
-            }     
+            // Close the resources for writing
+            writer.close();
+            fileWriter.close();
+
+            managerMenu(); // Go back to the menu
         } catch (IOException e) {
-            System.err.println("Error closing the resources: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
+        } finally {
+            // Close all resources in the finally block
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+                if (fileWriter != null) {
+                    fileWriter.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Error closing the resources: " + e.getMessage());
+            }
+        }
     }
-    }
-}
 //-------------------------------remove product---------------------------------------
 
-   public static void removeProduct(String productPtr) {
-    try {
-        Scanner scanner = new Scanner(new File(productPtr));
-        FileWriter fileWriter = new FileWriter("temp.txt");
-        BufferedWriter writer = new BufferedWriter(fileWriter);
+    public static void removeProduct(String productPtr) {
+        try {
+            Scanner scanner = new Scanner(new File(productPtr));
+            FileWriter fileWriter = new FileWriter("temp.txt");
+            BufferedWriter writer = new BufferedWriter(fileWriter);
 
-        Scanner input = new Scanner(System.in);
-        displayRemoveProducts(productPtr);        //to view all the item first
-        System.out.println("");
-        System.out.println("------------------------------------------------------------------");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("            \033[0;34m----------------------------");
-        System.out.println("            \033[0;34m*      Remove Product      *");
-        System.out.println("            \033[0;34m----------------------------");
-        System.out.println("");
-        System.out.print(" Enter the product ID to remove >  ");
-        String productIDToRemove = input.next();
+            Scanner input = new Scanner(System.in);
+            displayRemoveProducts(productPtr);        //to view all the item first
+            System.out.println("");
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("            \033[0;34m----------------------------");
+            System.out.println("            \033[0;34m*      Remove Product      *");
+            System.out.println("            \033[0;34m----------------------------");
+            System.out.println("");
+            System.out.print(" Enter the product ID to remove >  ");
+            String productIDToRemove = input.next();
 
-        String line;
-        boolean productFound = false; // Flag to check if the product exists
+            String line;
+            boolean productFound = false; // Flag to check if the product exists
 
-        while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            String[] parts = line.split(",");
-            String productID = parts[0].trim();
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                String[] parts = line.split(",");
+                String productID = parts[0].trim();
 
-            if (!productID.equals(productIDToRemove)) {
-                writer.write(line + System.lineSeparator());
-            } else {
-                productFound = true; // Set the flag to true if product is found
-            }
-        }
-
-        writer.close();
-        fileWriter.close();
-        scanner.close();
-
-        if (!productFound) {
-            System.out.println("Product with ID " + productIDToRemove + " not found.");
-        } else {
-            // Delete the original file
-            File originalFile = new File(productPtr);
-            if (originalFile.delete()) {
-                // Rename the temp file to the original file name
-                File tempFile = new File("temp.txt");
-                if (!tempFile.renameTo(originalFile)) {
-                    System.err.println("Error renaming the temp file.");
+                if (!productID.equals(productIDToRemove)) {
+                    writer.write(line + System.lineSeparator());
                 } else {
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("           \033[0;32m*Product removed Successfully!*");
-                    System.out.println("");
-                    System.out.println("------------------------------------------------------------------");
-                    System.out.println("");
-                    System.out.println("");
+                    productFound = true; // Set the flag to true if product is found
                 }
-            } else {
-                System.err.println("Error deleting the original file.");
             }
+
+            writer.close();
+            fileWriter.close();
+            scanner.close();
+
+            if (!productFound) {
+                System.out.println("Product with ID " + productIDToRemove + " not found.");
+            } else {
+                // Delete the original file
+                File originalFile = new File(productPtr);
+                if (originalFile.delete()) {
+                    // Rename the temp file to the original file name
+                    File tempFile = new File("temp.txt");
+                    if (!tempFile.renameTo(originalFile)) {
+                        System.err.println("Error renaming the temp file.");
+                    } else {
+                        System.out.println("");
+                        System.out.println("");
+                        System.out.println("           \033[0;32m*Product removed Successfully!*");
+                        System.out.println("");
+                        System.out.println("------------------------------------------------------------------");
+                        System.out.println("");
+                        System.out.println("");
+                    }
+                } else {
+                    System.err.println("Error deleting the original file.");
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error removing the product: " + e.getMessage());
         }
 
-    } catch (IOException e) {
-        System.err.println("Error removing the product: " + e.getMessage());
+        managerMenu(); // go back to menu
     }
-
-    managerMenu(); // go back to menu
-}
 //----------------------------------update------------------------------
 
     public static void updateProduct(String productPtr) {
@@ -385,7 +384,7 @@ private static void addProduct(String productPtr) {
         }
         managerMenu(); // go back to menu
     }
-    
+
 //--------------------------------------------------------
     public static void displayRemoveProducts(String productPtr) {
         System.out.println("");
@@ -409,7 +408,7 @@ private static void addProduct(String productPtr) {
 
                     // Format and print the product information
                     System.out.printf("%-15s %-30s RM%-10.2f %-10d%n", productId, productName, price, quantity);
-                    
+
                 } else {
                     System.err.println("Invalid line format: " + line);
                 }
@@ -420,7 +419,6 @@ private static void addProduct(String productPtr) {
 
         System.out.println("\033[0;34m--------------------------------------------------------------------");
         System.out.println("");
-     
 
-}
+    }
 }
