@@ -14,15 +14,146 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+        LoginMain();
+
+    }
+//-------------------------------method--------------------------------------------------------------
+//-------------------------------manager login--------------------------------------------------------------
+
+    public static void managerlogin() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String managerFile = "managerAccount.txt";
+            boolean isAuthenticated = false;
+
+            while (!isAuthenticated) {
+                System.out.println("");
+                System.out.print("              Username >  ");
+                String enteredUsername = scanner.nextLine().trim();
+
+                while (enteredUsername.isEmpty()) {
+                    System.out.println("Username cannot be empty. Please enter again.");
+                    System.out.print("              Username >  ");
+                    enteredUsername = scanner.nextLine().trim();
+                }
+
+                System.out.print("              Password >  ");
+                String enteredPassword = scanner.nextLine().trim();
+
+                while (enteredPassword.isEmpty()) {
+                    System.out.println("Password cannot be empty. Please enter again.");
+                    System.out.print("              Password >  ");
+                    enteredPassword = scanner.nextLine().trim();
+                }
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(managerFile))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length == 2) {
+                            String storedUsername = parts[0].trim();
+                            String storedPassword = parts[1].trim();
+
+                            if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {
+                                isAuthenticated = true;
+                                System.out.println("");
+                                System.out.println("");
+                                System.out.println("                \033[0;32m*Login Successful!*");
+                                System.out.println("");
+                                System.out.println("------------------------------------------------------------------");
+
+                                // Create an object of InventoryManager
+                                InventoryManager inventoryManager = new InventoryManager();
+                                inventoryManager.managerMenu();
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isAuthenticated) {
+                        System.out.println("");
+                        System.out.println("        \033[0;31m*Invalid username or password. Please Try Again.*");
+                        System.out.println("");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    //-------------------------------Cashier login--------------------------------------------------------------
+    public static void cashierlogin() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String cashierFile = "cashierAccount.txt";
+            boolean isAuthenticated = false;
+
+            while (!isAuthenticated) {
+                System.out.println("");
+                System.out.print("              Username >  ");
+                String enteredUsername = scanner.nextLine().trim();
+
+                while (enteredUsername.isEmpty()) {
+                    System.out.println("Username cannot be empty. Please enter again.");
+                    System.out.print("              Username >  ");
+                    enteredUsername = scanner.nextLine().trim();
+                }
+
+                System.out.print("              Password >  ");
+                String enteredPassword = scanner.nextLine().trim();
+
+                while (enteredPassword.isEmpty()) {
+                    System.out.println("Password cannot be empty. Please enter again.");
+                    System.out.print("              Password >  ");
+                    enteredPassword = scanner.nextLine().trim();
+                }
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(cashierFile))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length == 2) {
+                            String storedUsername = parts[0].trim();
+                            String storedPassword = parts[1].trim();
+
+                            if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {
+                                isAuthenticated = true;
+                                System.out.println("");
+                                System.out.println("");
+                                System.out.println("                \033[0;32m*Login Successful!*");
+                                System.out.println("");
+                                System.out.println("------------------------------------------------------------------");
+
+                                // Create an object of Cashier class
+                                Cashier cashier = new Cashier();
+                                cashier.cashierMenu();
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isAuthenticated) {
+                        System.out.println("");
+                        System.out.println(" \033[0;31m*Invalid username or password. Please Try Again.*");
+                        System.out.println("");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void LoginMain() {
         Scanner scanner = new Scanner(System.in);
         boolean exitProgram = false; // Flag to control program exit
-        
+
         while (!exitProgram) {
             System.out.println("");
             System.out.println("          ! WELCOME TO CHI BUY POS SYSTEM ! ");
             System.out.println("");
-            
-            
+
             System.out.println("         \033[0;34m*---------------------------------*");
             System.out.println("         \033[0;34m|           R  O  L  E            |");
             System.out.println("         \033[0;34m|---------------------------------|");
@@ -32,7 +163,7 @@ public class Main {
             System.out.println("         \033[0;34m*---------------------------------*");
             System.out.println("");
             System.out.print("           Please select your role >   ");
-            
+
             int select1 = scanner.nextInt();
 
             switch (select1) {
@@ -62,9 +193,9 @@ public class Main {
                     System.out.println("");
                     System.out.println("");
                     System.out.println("               \033[0;32m*Exiting program ....*");
-                    System.out.println(""); 
                     System.out.println("");
-                            
+                    System.out.println("");
+
                     exitProgram = true; // Set the flag to exit the program
                     break;
                 default:
@@ -76,136 +207,6 @@ public class Main {
             }
         }
 
-        scanner.close();
-
-    }
-//-------------------------------method--------------------------------------------------------------
-//-------------------------------manager login--------------------------------------------------------------
-
-        public static void managerlogin() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            String managerFile = "managerAccount.txt";
-            boolean isAuthenticated = false;
-    
-            while (!isAuthenticated) {
-                System.out.println("");
-                System.out.print("              Username >  ");
-                String enteredUsername = scanner.nextLine().trim();
-    
-                while (enteredUsername.isEmpty()) {
-                    System.out.println("Username cannot be empty. Please enter again.");
-                    System.out.print("              Username >  ");
-                    enteredUsername = scanner.nextLine().trim();
-                }
-    
-                System.out.print("              Password >  ");
-                String enteredPassword = scanner.nextLine().trim();
-    
-                while (enteredPassword.isEmpty()) {
-                    System.out.println("Password cannot be empty. Please enter again.");
-                    System.out.print("              Password >  ");
-                    enteredPassword = scanner.nextLine().trim();
-                }
-    
-                try (BufferedReader reader = new BufferedReader(new FileReader(managerFile))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] parts = line.split(",");
-                        if (parts.length == 2) {
-                            String storedUsername = parts[0].trim();
-                            String storedPassword = parts[1].trim();
-    
-                            if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {
-                                isAuthenticated = true;
-                                System.out.println("");
-                                System.out.println("");
-                                System.out.println("                \033[0;32m*Login Successful!*");
-                                System.out.println("");
-                                System.out.println("------------------------------------------------------------------");
-    
-                                // Create an object of InventoryManager
-                                InventoryManager inventoryManager = new InventoryManager();
-                                inventoryManager.managerMenu();
-    
-                                break;
-                            }
-                        }
-                    }
-    
-                    if (!isAuthenticated) {
-                        System.out.println("");
-                        System.out.println("        \033[0;31m*Invalid username or password. Please Try Again.*");
-                        System.out.println("");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
-
-    //-------------------------------Cashier login--------------------------------------------------------------
-    public static void cashierlogin() {
-    try (Scanner scanner = new Scanner(System.in)) {
-        String cashierFile = "cashierAccount.txt";
-        boolean isAuthenticated = false;
-
-        while (!isAuthenticated) {
-            System.out.println("");
-            System.out.print("              Username >  ");
-            String enteredUsername = scanner.nextLine().trim();
-
-            while (enteredUsername.isEmpty()) {
-                System.out.println("Username cannot be empty. Please enter again.");
-                System.out.print("              Username >  ");
-                enteredUsername = scanner.nextLine().trim();
-            }
-
-            System.out.print("              Password >  ");
-            String enteredPassword = scanner.nextLine().trim();
-
-            while (enteredPassword.isEmpty()) {
-                System.out.println("Password cannot be empty. Please enter again.");
-                System.out.print("              Password >  ");
-                enteredPassword = scanner.nextLine().trim();
-            }
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(cashierFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 2) {
-                        String storedUsername = parts[0].trim();
-                        String storedPassword = parts[1].trim();
-
-                        if (enteredUsername.equals(storedUsername) && enteredPassword.equals(storedPassword)) {
-                            isAuthenticated = true;
-                            System.out.println("");
-                            System.out.println("");
-                            System.out.println("                \033[0;32m*Login Successful!*");
-                            System.out.println("");
-                            System.out.println("------------------------------------------------------------------");
-
-                            // Create an object of Cashier class
-                            Cashier cashier = new Cashier();
-                            cashier.cashierMenu();
-
-                            break;
-                        }
-                    }
-                }
-
-                if (!isAuthenticated) {
-                    System.out.println("");
-                    System.out.println(" \033[0;31m*Invalid username or password. Please Try Again.*");
-                    System.out.println("");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
-
-
