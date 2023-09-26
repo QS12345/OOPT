@@ -1,0 +1,39 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package asss;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
+
+public class GregorianCalendarExample {
+    public static void main(String[] args) {
+        // Create a Gregorian calendar instance for the current date and time
+        GregorianCalendar calendar = new GregorianCalendar();
+
+        // You can also specify a specific date and time like this:
+        // GregorianCalendar calendar = new GregorianCalendar(2023, Calendar.SEPTEMBER, 26);
+
+        // Get and print various components of the calendar
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // Month is 0-based, so add 1
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        System.out.println("Year: " + year);
+        System.out.println("Month: " + month);
+        System.out.println("Day of Month: " + dayOfMonth);
+        System.out.println("Hour of Day: " + hourOfDay);
+        System.out.println("Minute: " + minute);
+        System.out.println("Second: " + second);
+
+        // You can also modify the calendar, for example, set a specific date:
+        // calendar.set(2023, Calendar.DECEMBER, 31);
+
+        // Print the modified date
+        System.out.println("Modified Year: " + calendar.get(Calendar.YEAR));
+    }
+}
+
