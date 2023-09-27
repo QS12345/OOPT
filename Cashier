@@ -386,7 +386,7 @@ public class Cashier {
             System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
         } else {
             // Display total amount for non-cash payments (e.g., credit card)
-            System.out.printf("Total Amount (including 5%% SST): RM%.2f%n", totalAmount);
+            System.out.printf("                                 Total Amount (including 5%% SST): RM %.2f%n", totalAmount);
         }
         System.out.println("");
         System.out.println("                \033[0;32m*Payment Successful!*");
