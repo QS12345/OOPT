@@ -79,4 +79,15 @@ import java.util.List;
             System.out.println("Payment failed. Insufficient funds.");
         }
     }
+    
+    public double calculateTotalAmount() {
+        double totalAmount = 0;
+        for (Product item : items) {
+            double totalPriceBeforeSST = item.getPrice() * item.getQuantity();
+            double sst = totalPriceBeforeSST * 0.05;
+            double totalPriceWithSST = totalPriceBeforeSST + sst;
+            totalAmount += totalPriceWithSST;
+        }
+        return totalAmount;
+    }
 }
