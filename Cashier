@@ -107,33 +107,42 @@ public class Cashier {
                             switch (paymentChoice) {
                                 case 1:
                                     // Credit Card Payment
-                                    System.out.print("Enter Credit Card Number: ");
+                                    System.out.println("");
+                                    System.out.println("            \033[0;34m---------------------------");
+                                    System.out.println("            \033[0;34m*       Credit Card       *");
+                                    System.out.println("            \033[0;34m---------------------------");
+                                    System.out.println("");
+                                    System.out.print(" Enter Credit Card Number >  ");
                                     String cardNumber = scanner.nextLine(); // Read the card number as a string
-
-                                    System.out.print("Enter Card Holder Name: ");
+                                    System.out.println("");
+                                    System.out.print("   Enter Card Holder Name >  ");
                                     String cardHolder = scanner.nextLine();
-
-                                    System.out.print("Enter Expiry Date: ");
+                                    System.out.println("");
+                                    System.out.print("        Enter Expiry Date >  ");
                                     String expiryDate = scanner.nextLine();
-
-                                    System.out.print("Enter CVV: ");
+                                    System.out.println("");
+                                    System.out.print("                Enter CVV >  ");
                                     String cvv = scanner.nextLine();
 
                                     // Add validations here
                                     if (!isValidCardNumber(cardNumber)) {
-                                        System.out.println("Invalid card number.");
+                                        System.out.println("");
+                                        System.out.println("            \033[0;31m*Invalid card number.*");
                                         continue;
                                     }
                                     if (!isValidCardHolderName(cardHolder)) {
-                                        System.out.println("Invalid card holder name.");
+                                        System.out.println("");
+                                        System.out.println("          \033[0;31m*Invalid card holder name.*");
                                         continue;
                                     }
                                     if (!isValidExpiryDate(expiryDate)) {
-                                        System.out.println("Invalid expiry date.");
+                                        System.out.println("");
+                                        System.out.println("            \033[0;31m*Invalid expiry date.*");
                                         continue;
                                     }
                                     if (!isValidCVV(cvv)) {
-                                        System.out.println("Invalid CVV.");
+                                        System.out.println("");
+                                        System.out.println("            \033[0;31m*Invalid CVV.*");
                                         continue;
                                     }
 
@@ -199,7 +208,7 @@ public class Cashier {
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
         System.out.println("");
-        System.out.println("                       \033[0;34mProduct List     ");
+        System.out.println("                          \033[0;34mProduct List     ");
         System.out.println("\033[0;34m--------------------------------------------------------------------");
         System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s%n", "Product ID", "Product Name", "Price", "Quantity");
         System.out.println("\033[0;34m--------------------------------------------------------------------");
