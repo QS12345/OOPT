@@ -31,9 +31,9 @@ import java.util.List;
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
         System.out.println("");
-        System.out.println("                                     \033[0;34mCHI BUY GROCERY");
+        System.out.println("                                  \033[0;34mFRESHHARBOR GROCERY");
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
-        System.out.printf("%-15s %-20s %-10s %-12s %-13s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price");
+        System.out.printf("%-15s %-30s %-10s %-12s %-13s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price");
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
 
         for (Product item : items) {
@@ -54,6 +54,7 @@ import java.util.List;
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
         System.out.printf("                                                              SST (5%%) : RM %-8.3f%n", totalSST);
         System.out.printf("                                      Total Amount (including 5%% SST)  : RM %.2f%n", totalAmountWithSST);
+        System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
 
     }
 
