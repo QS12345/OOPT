@@ -7,14 +7,15 @@
  *
  * @author GL63
  */
-class CreditCardPayment extends Payment {
+class CreditCardPayment implements Payment {
+    private double amount;
     private String cardNumber;
     private String cardHolder;
     private String expiryDate;
     private String cvv;
 
     public CreditCardPayment(double amount, String cardNumber, String cardHolder, String expiryDate, String cvv) {
-        super(amount);
+        this.amount = amount;
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder;
         this.expiryDate = expiryDate;
@@ -23,8 +24,12 @@ class CreditCardPayment extends Payment {
 
     @Override
     public void processPayment() {
-        super.processPayment();
         System.out.println("Processing credit card payment...");
         // Add code to handle credit card payment processing here
+    }
+
+    @Override
+    public double getAmount() {
+        return amount;
     }
 }
