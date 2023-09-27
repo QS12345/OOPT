@@ -7,18 +7,23 @@
  *
  * @author GL63
  */
-class CashPayment extends Payment {
+class CashPayment implements Payment {
+    private double amount;
     private double cashTendered;
 
     public CashPayment(double amount, double cashTendered) {
-        super(amount);
+        this.amount = amount;
         this.cashTendered = cashTendered;
     }
 
     @Override
     public void processPayment() {
-        super.processPayment();
         System.out.println("Processing cash payment...");
+    }
+
+    @Override
+    public double getAmount() {
+        return amount;
     }
 
     public double getCashTendered() {
