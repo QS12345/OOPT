@@ -135,6 +135,7 @@ public class Cashier {
                                     } else {
                                         payment = new CashPayment(calculatedTotalAmount, cashTendered);
                                         printReceipt(checkoutCart, payment, calculatedTotalAmount);
+                                    
                                     }
                                     break;
 
@@ -194,7 +195,7 @@ public class Cashier {
                     int quantity = Integer.parseInt(parts[3].trim());
 
                     // Format and print the product information
-                    System.out.printf("%-15s %-30s $%-10.2f %-10d%n", productId, productName, price, quantity);
+                    System.out.printf("%-15s %-30s RM %-10.2f %-10d%n", productId, productName, price, quantity);
                 } else {
                     System.err.println("Invalid line format: " + line);
                 }
@@ -333,7 +334,7 @@ public class Cashier {
             System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s%n", "Product ID", "Product Name", "Price", "Quantity");
             System.out.println("\033[0;34m------------------------------------------------------------------------");
             for (Product item : items) {
-                System.out.printf("%-15s %-30s $%-10.2f %-10d%n",
+                System.out.printf("%-15s %-30s RM %-10.2f %-10d%n",
                         item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity());
             }
             System.out.println("\033[0;34m------------------------------------------------------------------------");
@@ -346,13 +347,16 @@ public class Cashier {
 
     //display receipt--------------and do the checkout-------------------
     public void printReceipt(CheckOutCart checkoutCart, Payment payment, double totalAmount) {
+        String currentDateTime = GregorianCalendarExample.getCurrentDateTime();
         System.out.println("");
         System.out.println("");
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
+        System.out.println("Date and Time : " + currentDateTime);
         System.out.println("");
+        System.out.println("                                  \033[0;34mFRESHHARBOR GROCERY");
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
-        System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s %-15s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price(include sst)");
+        System.out.printf("\033[0;34m%-15s %-25s %-10s %-10s %-15s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price");
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("report.txt", true))) {
@@ -364,7 +368,7 @@ public class Cashier {
                 totalSSTcollected += sst;
 
                 String line = String.format("%s,%s,%.2f,%d,%.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
-                System.out.printf("%-15s %-10s RM%-10.2f %-10d RM%-15.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
+                System.out.printf("%-15s %-25s RM %-10.2f %-10d RM %-15.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
                 writer.write(line);
             }
         } catch (IOException e) {
@@ -373,17 +377,20 @@ public class Cashier {
 
         double sst = totalAmount - (totalAmount / 1.05); // Calculate SST based on total amount
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
-        System.out.printf("TOTAL SST CHARGE:RM%.2f%n", sst);
+        System.out.printf("                                                TOTAL SST CHARGE : RM %.2f%n", sst);
 
         if (payment instanceof CashPayment) {
             double change = ((CashPayment) payment).getCashTendered() - totalAmount;
-            System.out.printf("Total Amount (including 5%% SST): RM%.2f%n", totalAmount);
-            System.out.printf("Change: $%.2f%n", change);
+            System.out.printf("                                 Total Amount (including 5%% SST) : RM %.2f%n", totalAmount);
+            System.out.printf("                                                          Change : RM %.2f%n", change);
+            System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
         } else {
             // Display total amount for non-cash payments (e.g., credit card)
             System.out.printf("Total Amount (including 5%% SST): RM%.2f%n", totalAmount);
         }
-
+        System.out.println("");
+        System.out.println("                \033[0;32m*Payment Successful!*");
+        System.out.println("");
         System.out.println("--------------------------------------------------------");
     }
 
@@ -391,7 +398,7 @@ public class Cashier {
         // Initialize variables to store total gain and total collected SST
         double totalGain = 0.0;
         double totalCollectedSST = 0.0;
-        String currentDateTime = GregorianCalendarExample.getCurrentDateTime();
+        
 
         // Initialize a data structure to store product summaries
         Map<String, ProductSummary> productSummaries = new HashMap<>();
@@ -429,7 +436,7 @@ public class Cashier {
         System.out.println("");
         System.out.println("");
 
-        System.out.println("Date and Time - " + currentDateTime);
+        System.out.println("                               \033[0;34mFRESHHARBOR GROCERY");
         System.out.println("");
         System.out.println("                                   \033[0;34mSUMMARY REPORT                                            ");
         System.out.println("\033[0;34m======================================================================================================");
