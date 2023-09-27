@@ -16,22 +16,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 
-
-
-
 /**
  *
  * @author GL63
  */
 public class Cashier {
-Main main = new Main();// login page
+
+    Main main = new Main();// login page
     //variable
     static double totalPriceSummary = 0;
     static double totalSSTcollected = 0;
-   
+
     cartItem cart = new cartItem(); // Create a cart instance
     static String productPtr = "product.txt";
-    
+
     public String getCurrentDateTime() {
         // Get the current date and time
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -44,12 +42,11 @@ Main main = new Main();// login page
 
         return formattedDateTime;
     }
-    
-  public void cashierMenu() {
+
+    public void cashierMenu() {
         Scanner scanner = new Scanner(System.in);
 
-        
-        int select=-1;
+        int select = -1;
         do {
             System.out.println("");
             System.out.println("              \033[0;32mYou are in Cashier System");
@@ -63,7 +60,7 @@ Main main = new Main();// login page
             System.out.println("         \033[0;34m|   [4] Logout                    |"); //--exit to login -------
             System.out.println("         \033[0;34m*---------------------------------*");
             System.out.println("");
-            
+
             try {
                 System.out.print("             Select your option >   ");
                 select = scanner.nextInt();
@@ -73,7 +70,7 @@ Main main = new Main();// login page
                 scanner.nextLine(); // Consume the invalid input
                 continue; // Allow the user to re-enter the option
             }
-            
+
             scanner.nextLine(); // Consume the newline character
 
             switch (select) {
@@ -85,7 +82,7 @@ Main main = new Main();// login page
                         if (!cart.getItems().isEmpty()) {
                             CheckOutCart checkoutCart = new CheckOutCart(cart.getItems());
                             checkoutCart.calculatePrices();// show the checkout cart 
-
+                            double calculatedTotalAmount = checkoutCart.calculateTotalAmount();
                             double totalAmount = 0;
                             // Proceed with payment
                             System.out.println("");
@@ -119,22 +116,28 @@ Main main = new Main();// login page
                                     System.out.print("Enter CVV: ");
                                     String cvv = scanner.nextLine();
                                     payment = new CreditCardPayment(totalAmount, cardNumber, cardHolder, expiryDate, cvv);
-                                    printReceipt(checkoutCart, payment);
+                                    printReceipt(checkoutCart, payment, calculatedTotalAmount);
 
                                     break;
                                 case 2:
                                     // Cash Payment
-                                    System.out.println("");
                                     System.out.println("");
                                     System.out.println("            \033[0;34m---------------------------");
                                     System.out.println("            \033[0;34m*           Cash          *");
                                     System.out.println("            \033[0;34m---------------------------");
                                     System.out.print("       Enter Cash Amount (RM) >  ");
                                     double cashTendered = scanner.nextDouble();
-                                    payment = new CashPayment(totalAmount, cashTendered);
-                                    printReceipt(checkoutCart, payment);
+                                    
 
+                                    if (cashTendered < calculatedTotalAmount) {
+                                        System.out.println("      \033[0;31m*Insufficient cash provided. Please provide a sufficient amount or choose another payment method.*");
+                                        continue; // Go back to the payment choice
+                                    } else {
+                                        payment = new CashPayment(calculatedTotalAmount, cashTendered);
+                                        printReceipt(checkoutCart, payment, calculatedTotalAmount);
+                                    }
                                     break;
+
                                 default:
                                     System.out.println("");
                                     System.out.println("      \033[0;31m*Please select a valid payment method*");
@@ -155,7 +158,7 @@ Main main = new Main();// login page
                     summaryReport();
                     break;
                 case 4:
-             
+
                     System.out.println("");
                     System.out.println("           \033[0;32m*Exiting Manager program ....*");
                     System.out.println("");
@@ -166,9 +169,10 @@ Main main = new Main();// login page
                     System.out.println("      \033[0;31m*Invalid option. Please type again*");
                     break;
             }
-        } while(select !=4);
-  }
+        } while (select != 4);
+    }
 //----------display product----------------------
+
     public static void displayProducts(String productPtr) {
         System.out.println("");
         System.out.println("------------------------------------------------------------------");
@@ -205,113 +209,111 @@ Main main = new Main();// login page
     }
 
     //----------------scan item------------------------
-  public void scanItem(cartItem cart) {
-    Scanner scanner = new Scanner(System.in);
-    char choice;
+    public void scanItem(cartItem cart) {
+        Scanner scanner = new Scanner(System.in);
+        char choice;
 
-    do {
-        displayProducts(productPtr);
-        System.out.print("   Enter the product ID >  ");
-        String productId = scanner.nextLine();
-        
-        // Read the product quantity
-        System.out.print("         Enter Quantity >  ");
-        int quantity = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        do {
+            displayProducts(productPtr);
+            System.out.print("   Enter the product ID >  ");
+            String productId = scanner.nextLine();
 
-        // Read product data from the file and create a Product object
-        Product product = createProductFromData(productId,quantity);
+            // Read the product quantity
+            System.out.print("         Enter Quantity >  ");
+            int quantity = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
 
-        if (product != null) {
-            int availableStock = product.getQuantity();
-            
-            if (quantity <= 0) {
-                System.err.println("      \033[0;31m*Please select a valid quantity !*");
-            } else if (quantity > availableStock) {
-                System.err.println("   \033[0;31m*Quantity exceeds available stock !*");
+            // Read product data from the file and create a Product object
+            Product product = createProductFromData(productId, quantity);
 
-            } else {
-                // Add the product to the cart
-                cart.addItem(product);
-                System.out.println("");
-                System.out.println("");
-                System.out.println("            \033[0;32m*Item added to the cart.*");
+            if (product != null) {
+                int availableStock = product.getQuantity();
 
-                // Ask the user if they want to scan another item
-                System.out.println("");
-                System.out.println("");
-                System.out.println("------------------------------------------------------------------");
-                System.out.println("");
-                System.out.println("");
-                System.out.println("            \033[0;34m*                         *");
-                System.out.println("            \033[0;34m    [Y]  Yes               ");
-                System.out.println("            \033[0;34m    [N]  Proceed to cart   ");
-                System.out.println("            \033[0;34m*                         *");
-                System.out.println("");
-                System.out.println("");
-                System.out.print("           Scan another item? >  ");
-                choice = scanner.nextLine().charAt(0);
+                if (quantity <= 0) {
+                    System.err.println("      \033[0;31m*Please select a valid quantity !*");
+                } else if (quantity > availableStock) {
+                    System.err.println("   \033[0;31m*Quantity exceeds available stock !*");
 
-                if (choice == 'n' || choice == 'N') {
-                    displayCart(cart); // Display the cart
-                    break; // Exit the loop
-                }
-            }
-        } else {
-            System.err.println("      \033[0;31m*Product not found !*");
-        }
-    } while (true);
-}
-
-
-    //---------------------read the data from text file so can use for scanning item--------------this is important-------------!!!!!!!!!!!!!!!!!!!!
-private Product createProductFromData(String productId, int requestedQuantity) {
-    Product product = null; // Initialize product to null
-
-    try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
-        String line;
-        List<String> lines = new ArrayList<>();
-        boolean productFound = false;
-
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts.length == 4 && parts[0].trim().equals(productId)) {
-                String productName = parts[1].trim();
-                double price = Double.parseDouble(parts[2].trim());
-                int currentQuantity = Integer.parseInt(parts[3].trim());
-
-                // Check if the product is in stock
-                if (currentQuantity >= requestedQuantity) {
-                    // Create a Product object
-                    product = new Product(productId, productName, price, requestedQuantity);
-                    productFound = true;
-                    lines.add(String.format("%s,%s,%.2f,%d", productId, productName, price, currentQuantity - requestedQuantity));
                 } else {
-                    // Product does not have enough stock
-                    lines.add(line); // Keep the line as-is
-                    System.out.println("      \033[0;31m*Not enough stock for this product !*");
+                    // Add the product to the cart
+                    cart.addItem(product);
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("            \033[0;32m*Item added to the cart.*");
+
+                    // Ask the user if they want to scan another item
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("------------------------------------------------------------------");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("            \033[0;34m*                         *");
+                    System.out.println("            \033[0;34m    [Y]  Yes               ");
+                    System.out.println("            \033[0;34m    [N]  Proceed to cart   ");
+                    System.out.println("            \033[0;34m*                         *");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.print("           Scan another item? >  ");
+                    choice = scanner.nextLine().charAt(0);
+
+                    if (choice == 'n' || choice == 'N') {
+                        displayCart(cart); // Display the cart
+                        break; // Exit the loop
+                    }
                 }
             } else {
-                lines.add(line); // Add the unchanged line to the list
+                System.err.println("      \033[0;31m*Product not found !*");
             }
-        }
-
-        // Write the updated product quantities back to the file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productPtr))) {
-            for (String updatedLine : lines) {
-                writer.write(updatedLine);
-                writer.newLine();
-            }
-        }
-
-        return productFound ? product : null;
-    } catch (IOException e) {
-        System.err.println("Error reading/writing the file: " + e.getMessage());
+        } while (true);
     }
 
-    return null; // Product not found or error occurred
-}
+    //---------------------read the data from text file so can use for scanning item--------------this is important-------------!!!!!!!!!!!!!!!!!!!!
+    private Product createProductFromData(String productId, int requestedQuantity) {
+        Product product = null; // Initialize product to null
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
+            String line;
+            List<String> lines = new ArrayList<>();
+            boolean productFound = false;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4 && parts[0].trim().equals(productId)) {
+                    String productName = parts[1].trim();
+                    double price = Double.parseDouble(parts[2].trim());
+                    int currentQuantity = Integer.parseInt(parts[3].trim());
+
+                    // Check if the product is in stock
+                    if (currentQuantity >= requestedQuantity) {
+                        // Create a Product object
+                        product = new Product(productId, productName, price, requestedQuantity);
+                        productFound = true;
+                        lines.add(String.format("%s,%s,%.2f,%d", productId, productName, price, currentQuantity - requestedQuantity));
+                    } else {
+                        // Product does not have enough stock
+                        lines.add(line); // Keep the line as-is
+                        System.out.println("      \033[0;31m*Not enough stock for this product !*");
+                    }
+                } else {
+                    lines.add(line); // Add the unchanged line to the list
+                }
+            }
+
+            // Write the updated product quantities back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(productPtr))) {
+                for (String updatedLine : lines) {
+                    writer.write(updatedLine);
+                    writer.newLine();
+                }
+            }
+
+            return productFound ? product : null;
+        } catch (IOException e) {
+            System.err.println("Error reading/writing the file: " + e.getMessage());
+        }
+
+        return null; // Product not found or error occurred
+    }
 
     //-------------------------display cart------------------------
     public void displayCart(cartItem cart) {            //this is use for display cart item whenever user want to
@@ -343,7 +345,7 @@ private Product createProductFromData(String productId, int requestedQuantity) {
     }
 
     //display receipt--------------and do the checkout-------------------
-    public void printReceipt(CheckOutCart checkoutCart, Payment payment) {
+    public void printReceipt(CheckOutCart checkoutCart, Payment payment, double totalAmount) {
         System.out.println("");
         System.out.println("");
         System.out.println("------------------------------------------------------------------");
@@ -353,9 +355,7 @@ private Product createProductFromData(String productId, int requestedQuantity) {
         System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s %-15s%n", "Product ID", "Product Name", "Price", "Quantity", "Total Price(include sst)");
         System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
 
-        double totalAmount = 0;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("report.txt", true))) {
-
             for (Product item : checkoutCart.getItems()) {
                 double totalPriceBeforeSST = item.getPrice() * item.getQuantity();
                 totalPriceSummary += totalPriceBeforeSST;
@@ -363,14 +363,10 @@ private Product createProductFromData(String productId, int requestedQuantity) {
                 double sst = totalPriceBeforeSST * 0.05;
                 totalSSTcollected += sst;
 
-                double totalPriceWithSST = totalPriceBeforeSST + sst;
-                totalAmount += totalPriceWithSST;
-
                 String line = String.format("%s,%s,%.2f,%d,%.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
                 System.out.printf("%-15s %-10s RM%-10.2f %-10d RM%-15.2f%n", item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), totalPriceBeforeSST);
                 writer.write(line);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -389,14 +385,13 @@ private Product createProductFromData(String productId, int requestedQuantity) {
         }
 
         System.out.println("--------------------------------------------------------");
-
     }
 
     public static void summaryReport() {
         // Initialize variables to store total gain and total collected SST
         double totalGain = 0.0;
         double totalCollectedSST = 0.0;
-       String currentDateTime = GregorianCalendarExample.getCurrentDateTime();
+        String currentDateTime = GregorianCalendarExample.getCurrentDateTime();
 
         // Initialize a data structure to store product summaries
         Map<String, ProductSummary> productSummaries = new HashMap<>();
@@ -426,15 +421,14 @@ private Product createProductFromData(String productId, int requestedQuantity) {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         // Print the summary report
-         System.out.println("");
+        System.out.println("");
         System.out.println("");
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
         System.out.println("");
-         
-        
+
         System.out.println("Date and Time - " + currentDateTime);
         System.out.println("");
         System.out.println("                                   \033[0;34mSUMMARY REPORT                                            ");
@@ -452,7 +446,7 @@ private Product createProductFromData(String productId, int requestedQuantity) {
         System.out.println("                                                                   Total Gain (RM) : " + totalGain);
         String formattedTotalSST = String.format("%.2f", totalCollectedSST);
         System.out.println("                                                          Total SST Collected (RM) : " + formattedTotalSST);
-         System.out.println("");
+        System.out.println("");
         System.out.println("");
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
