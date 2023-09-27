@@ -108,16 +108,37 @@ public class Cashier {
                                 case 1:
                                     // Credit Card Payment
                                     System.out.print("Enter Credit Card Number: ");
-                                    String cardNumber = scanner.nextLine();
+                                    String cardNumber = scanner.nextLine(); // Read the card number as a string
+
                                     System.out.print("Enter Card Holder Name: ");
                                     String cardHolder = scanner.nextLine();
+
                                     System.out.print("Enter Expiry Date: ");
                                     String expiryDate = scanner.nextLine();
+
                                     System.out.print("Enter CVV: ");
                                     String cvv = scanner.nextLine();
+
+                                    // Add validations here
+                                    if (!isValidCardNumber(cardNumber)) {
+                                        System.out.println("Invalid card number.");
+                                        continue;
+                                    }
+                                    if (!isValidCardHolderName(cardHolder)) {
+                                        System.out.println("Invalid card holder name.");
+                                        continue;
+                                    }
+                                    if (!isValidExpiryDate(expiryDate)) {
+                                        System.out.println("Invalid expiry date.");
+                                        continue;
+                                    }
+                                    if (!isValidCVV(cvv)) {
+                                        System.out.println("Invalid CVV.");
+                                        continue;
+                                    }
+
                                     payment = new CreditCardPayment(totalAmount, cardNumber, cardHolder, expiryDate, cvv);
                                     printReceipt(checkoutCart, payment, calculatedTotalAmount);
-
                                     break;
                                 case 2:
                                     // Cash Payment
@@ -127,7 +148,6 @@ public class Cashier {
                                     System.out.println("            \033[0;34m---------------------------");
                                     System.out.print("       Enter Cash Amount (RM) >  ");
                                     double cashTendered = scanner.nextDouble();
-                                    
 
                                     if (cashTendered < calculatedTotalAmount) {
                                         System.out.println("      \033[0;31m*Insufficient cash provided. Please provide a sufficient amount or choose another payment method.*");
@@ -135,7 +155,7 @@ public class Cashier {
                                     } else {
                                         payment = new CashPayment(calculatedTotalAmount, cashTendered);
                                         printReceipt(checkoutCart, payment, calculatedTotalAmount);
-                                    
+
                                     }
                                     break;
 
@@ -274,9 +294,6 @@ public class Cashier {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
             String line;
-            List<String> lines = new ArrayList<>();
-            boolean productFound = false;
-
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4 && parts[0].trim().equals(productId)) {
@@ -288,13 +305,38 @@ public class Cashier {
                     if (currentQuantity >= requestedQuantity) {
                         // Create a Product object
                         product = new Product(productId, productName, price, requestedQuantity);
-                        productFound = true;
-                        lines.add(String.format("%s,%s,%.2f,%d", productId, productName, price, currentQuantity - requestedQuantity));
                     } else {
                         // Product does not have enough stock
-                        lines.add(line); // Keep the line as-is
                         System.out.println("      \033[0;31m*Not enough stock for this product !*");
                     }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+
+        return product; // Product details or null if not found
+    }
+
+    private void deductProductQuantityFromStock(List<Product> purchasedItems) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(productPtr))) {
+            List<String> lines = new ArrayList<>();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String productId = parts[0].trim();
+                    String productName = parts[1].trim();
+                    double price = Double.parseDouble(parts[2].trim());
+                    int currentQuantity = Integer.parseInt(parts[3].trim());
+
+                    for (Product item : purchasedItems) {
+                        if (item.getProductId().equals(productId)) {
+                            currentQuantity -= item.getQuantity();
+                        }
+                    }
+
+                    lines.add(String.format("%s,%s,%.2f,%d", productId, productName, price, currentQuantity));
                 } else {
                     lines.add(line); // Add the unchanged line to the list
                 }
@@ -307,13 +349,9 @@ public class Cashier {
                     writer.newLine();
                 }
             }
-
-            return productFound ? product : null;
         } catch (IOException e) {
             System.err.println("Error reading/writing the file: " + e.getMessage());
         }
-
-        return null; // Product not found or error occurred
     }
 
     //-------------------------display cart------------------------
@@ -392,13 +430,13 @@ public class Cashier {
         System.out.println("                \033[0;32m*Payment Successful!*");
         System.out.println("");
         System.out.println("--------------------------------------------------------");
+        deductProductQuantityFromStock(checkoutCart.getItems());
     }
 
     public static void summaryReport() {
         // Initialize variables to store total gain and total collected SST
         double totalGain = 0.0;
         double totalCollectedSST = 0.0;
-        
 
         // Initialize a data structure to store product summaries
         Map<String, ProductSummary> productSummaries = new HashMap<>();
@@ -461,4 +499,30 @@ public class Cashier {
 
     }
 
+    private boolean isValidCardNumber(String cardNumber) {
+        return cardNumber != null && cardNumber.matches("\\d{16}");
+    }
+
+    private boolean isValidCardHolderName(String cardHolder) {
+        return cardHolder != null && cardHolder.matches("^[a-zA-Z\\s]+$");
+    }
+
+    private boolean isValidExpiryDate(String expiryDate) {
+        if (expiryDate == null || !expiryDate.matches("^\\d{2}/\\d{2}$")) {
+            return false;
+        }
+        String[] parts = expiryDate.split("/");
+        int month = Integer.parseInt(parts[0]);
+        int year = Integer.parseInt(parts[1]);
+        LocalDateTime now = LocalDateTime.now();
+        int currentYearLastTwoDigits = now.getYear() % 100;
+        if (year < currentYearLastTwoDigits || (year == currentYearLastTwoDigits && month <= now.getMonthValue())) {
+            return false;
+        }
+        return month >= 1 && month <= 12;
+    }
+
+    private boolean isValidCVV(String cvv) {
+        return cvv != null && cvv.matches("\\d{3,4}");
+    }
 }
