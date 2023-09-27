@@ -112,16 +112,16 @@ public class Cashier {
                                     System.out.println("            \033[0;34m*       Credit Card       *");
                                     System.out.println("            \033[0;34m---------------------------");
                                     System.out.println("");
-                                    System.out.print(" Enter Credit Card Number >  ");
+                                    System.out.print(" Enter Credit Card Number(eg:1234123412341234) >  ");
                                     String cardNumber = scanner.nextLine(); // Read the card number as a string
                                     System.out.println("");
-                                    System.out.print("   Enter Card Holder Name >  ");
+                                    System.out.print("            Enter Card Holder Name(eg:Godlike) >  ");
                                     String cardHolder = scanner.nextLine();
                                     System.out.println("");
-                                    System.out.print("        Enter Expiry Date >  ");
+                                    System.out.print("                   Enter Expiry Date(eg:06/25) >  ");
                                     String expiryDate = scanner.nextLine();
                                     System.out.println("");
-                                    System.out.print("                Enter CVV >  ");
+                                    System.out.print("                             Enter CVV(eg:123) >  ");
                                     String cvv = scanner.nextLine();
 
                                     // Add validations here
@@ -433,7 +433,7 @@ public class Cashier {
             System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
         } else {
             // Display total amount for non-cash payments (e.g., credit card)
-            System.out.printf("                                 Total Amount (including 5%% SST): RM %.2f%n", totalAmount);
+            System.out.printf("                                  Total Amount (including 5%% SST): RM %.2f%n", totalAmount);
         }
         System.out.println("");
         System.out.println("                \033[0;32m*Payment Successful!*");
