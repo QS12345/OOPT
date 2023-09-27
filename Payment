@@ -7,18 +7,8 @@
  *
  * @author GL63
  */
-class Payment {
-    private double amount;
-
-    public Payment(double amount) {
-        this.amount = amount;
-    }
-
-    public void processPayment() {
-        System.out.println("Processing payment...");
-    }
-
-    public double getAmount() {
-        return amount;
-    }
+// Payment.java
+interface Payment {
+    void processPayment();
+    double getAmount();
 }
