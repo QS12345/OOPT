@@ -31,13 +31,9 @@ public class Cashier {
     static String productPtr = "product.txt";
 
     public String getCurrentDateTime() {
-        // Get the current date and time
+     
         LocalDateTime currentDateTime = LocalDateTime.now();
-
-        // Define a format for the date and time (you can customize this format)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        // Format the current date and time as a string
         String formattedDateTime = currentDateTime.format(formatter);
 
         return formattedDateTime;
@@ -112,16 +108,16 @@ public class Cashier {
                                     System.out.println("            \033[0;34m*       Credit Card       *");
                                     System.out.println("            \033[0;34m---------------------------");
                                     System.out.println("");
-                                    System.out.print(" Enter Credit Card Number >  ");
+                                    System.out.print(" Enter Credit Card Number(eg:1234123412341234) >  ");
                                     String cardNumber = scanner.nextLine(); // Read the card number as a string
                                     System.out.println("");
-                                    System.out.print("   Enter Card Holder Name >  ");
+                                    System.out.print("            Enter Card Holder Name(eg:Godlike) >  ");
                                     String cardHolder = scanner.nextLine();
                                     System.out.println("");
-                                    System.out.print("        Enter Expiry Date >  ");
+                                    System.out.print("                   Enter Expiry Date(eg:06/25) >  ");
                                     String expiryDate = scanner.nextLine();
                                     System.out.println("");
-                                    System.out.print("                Enter CVV >  ");
+                                    System.out.print("                             Enter CVV(eg:123) >  ");
                                     String cvv = scanner.nextLine();
 
                                     // Add validations here
@@ -208,7 +204,7 @@ public class Cashier {
         System.out.println("------------------------------------------------------------------");
         System.out.println("");
         System.out.println("");
-        System.out.println("                       \033[0;34mProduct List     ");
+        System.out.println("                          \033[0;34mProduct List     ");
         System.out.println("\033[0;34m--------------------------------------------------------------------");
         System.out.printf("\033[0;34m%-15s %-30s %-10s %-10s%n", "Product ID", "Product Name", "Price", "Quantity");
         System.out.println("\033[0;34m--------------------------------------------------------------------");
@@ -433,7 +429,7 @@ public class Cashier {
             System.out.println("\033[0;34m-----------------------------------------------------------------------------------------");
         } else {
             // Display total amount for non-cash payments (e.g., credit card)
-            System.out.printf("                                 Total Amount (including 5%% SST): RM %.2f%n", totalAmount);
+            System.out.printf("                                  Total Amount (including 5%% SST): RM %.2f%n", totalAmount);
         }
         System.out.println("");
         System.out.println("                \033[0;32m*Payment Successful!*");
